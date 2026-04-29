@@ -247,7 +247,87 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
 .toast{position:fixed;bottom:2rem;right:2rem;background:rgba(16,30,18,.95);border:1px solid rgba(194,96,64,.38);color:var(--tx);padding:1rem 1.5rem;border-radius:12px;font-size:.88rem;backdrop-filter:blur(20px);z-index:9000;transform:translateY(100px);opacity:0;transition:transform .4s,opacity .4s}
 .toast.sh{transform:translateY(0);opacity:1}
 
+/* ─── Destination Picker ─────────────────────────────── */
+#dest{height:100vh;display:flex;position:relative;overflow:hidden}
+.dest-half{
+  flex:1;position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;padding:5rem 4rem;
+  transition:flex .75s cubic-bezier(.23,1,.32,1);
+  cursor:pointer;
+}
+.dest-half:hover{flex:1.12}
+.dest-bg{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform 1s cubic-bezier(.23,1,.32,1);
+}
+.dest-half:hover .dest-bg{transform:scale(1.07)}
+.dest-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,14,7,.9) 0%,rgba(6,14,7,.32) 50%,rgba(6,14,7,.08) 100%);
+  transition:opacity .4s;
+}
+.dest-sep{
+  position:absolute;left:50%;top:12%;bottom:12%;width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.18),transparent);
+  z-index:5;pointer-events:none;transform:translateX(-50%);
+}
+.dest-cnt{position:relative;z-index:3;user-select:none}
+.dest-tag{
+  display:block;font-size:.62rem;font-weight:600;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gd);margin-bottom:.9rem;
+}
+.dest-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(4.5rem,9vw,8.5rem);
+  font-weight:900;font-style:italic;color:#fff;
+  line-height:.9;margin-bottom:1.2rem;
+  text-shadow:0 4px 60px rgba(0,0,0,.55);
+}
+.dest-sub{font-size:.88rem;color:rgba(244,239,230,.65);line-height:1.65;margin-bottom:2rem}
+.dest-cta{
+  display:inline-flex;align-items:center;
+  font-size:.76rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--gd);border-bottom:1px solid rgba(194,96,64,.38);padding-bottom:.22rem;
+  transition:letter-spacing .35s,border-color .35s;
+}
+.dest-half:hover .dest-cta{letter-spacing:.2em;border-color:var(--gd)}
+
+/* Scroll hint on dest section */
+#dest-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  z-index:6;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);white-space:nowrap;pointer-events:none;
+  display:flex;align-items:center;gap:.4rem;
+}
+
+/* Destination switcher pills */
+#dest-switch{
+  display:none;
+  padding:.5rem 4rem;
+  position:sticky;top:5rem;z-index:500;
+}
+#dest-switch.vis{display:block}
+.dsw-inner{
+  display:inline-flex;
+  background:rgba(12,26,14,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--bd);border-radius:50px;padding:.25rem;gap:.2rem;
+}
+.dsw-btn{
+  padding:.32rem 1rem;border-radius:50px;font-size:.72rem;font-weight:600;
+  letter-spacing:.07em;cursor:pointer;border:none;background:transparent;
+  color:var(--mu);transition:all .25s;font-family:'Inter',sans-serif;
+}
+.dsw-btn.on{background:var(--gr);color:var(--dk);font-weight:700}
+
 /* ─── Responsive ──────────────────────────────────────── */
+@media(max-width:768px){
+  #dest{flex-direction:column}
+  .dest-half{padding:3rem 2rem;align-items:flex-end}
+  .dest-sep{top:50%;bottom:auto;left:10%;right:10%;width:auto;height:1px;transform:translateY(-50%)}
+  #dest-switch{padding:.5rem 1.5rem}
+}
 @media(max-width:900px){
   #nav,#nav.sc{padding:1.1rem 1.5rem}
   .nav-ul{display:none}
@@ -441,12 +521,41 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
       <p class="hero-sub">Des appartements d'exception entre l'océan sauvage de Pipa<br>et l'énergie urbaine de São Paulo.</p>
     </div>
     <div class="hero-right">
-      <a href="#apts" class="btn-pr">Découvrir les logements →</a>
+      <a href="#dest" class="btn-pr">Choisir ma destination →</a>
       <a href="#exp" class="btn-gh">Explorer Pipa</a>
     </div>
   </div>
 
 </section>
+
+<!-- Destination Picker -->
+<div id="dest">
+  <div class="dest-sep"></div>
+
+  <div class="dest-half" data-dest="pipa">
+    <div class="dest-bg" style="background-image:url('https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=1400&q=85')"></div>
+    <div class="dest-ov"></div>
+    <div class="dest-cnt">
+      <span class="dest-tag">Nordeste · Brésil</span>
+      <h2 class="dest-name">Pipa</h2>
+      <p class="dest-sub">Falaises sauvages, plages<br>préservées &amp; village bohème</p>
+      <span class="dest-cta">Explorer →</span>
+    </div>
+  </div>
+
+  <div class="dest-half" data-dest="sp">
+    <div class="dest-bg" style="background-image:url('https://images.unsplash.com/photo-1626683242316-58a98b5c4d73?w=1400&q=85')"></div>
+    <div class="dest-ov"></div>
+    <div class="dest-cnt">
+      <span class="dest-tag">Sudeste · Brésil</span>
+      <h2 class="dest-name">São Paulo</h2>
+      <p class="dest-sub">Énergie urbaine, quartiers<br>tendance &amp; gastronomie</p>
+      <span class="dest-cta">Explorer →</span>
+    </div>
+  </div>
+
+  <div id="dest-hint"><span class="sh-arr">↓</span>&nbsp;Choisissez votre destination</div>
+</div>
 
 <!-- Stats -->
 <div class="stats">
@@ -454,6 +563,14 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
   <div class="st"><span class="st-n">2</span><span>Destinations au Brésil</span></div>
   <div class="st"><span class="st-n">500+</span><span>Voyageurs accueillis</span></div>
   <div class="st"><span class="st-n">4.9★</span><span>Note moyenne</span></div>
+</div>
+
+<!-- Destination switcher (shown after selection) -->
+<div id="dest-switch">
+  <div class="dsw-inner">
+    <button class="dsw-btn" data-dest="pipa">Pipa</button>
+    <button class="dsw-btn" data-dest="sp">São Paulo</button>
+  </div>
 </div>
 
 <!-- Apartments -->
@@ -466,7 +583,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
   <div class="apts-grid">
 
     <!-- Listing 1 — Booking.com : Pipa Piazzeta 13 -->
-    <div class="ac rv d1">
+    <div class="ac rv d1" data-dest="pipa">
       <div class="ac-iw">
         <img class="ac-img" src="photos/Apt1/13.jpg" alt="Piazzeta 13" loading="lazy">
         <span class="ac-badge">Booking.com</span>
@@ -489,9 +606,9 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
 
     <!-- Listing 2 — Airbnb -->
-    <div class="ac rv d2">
+    <div class="ac rv d2" data-dest="pipa">
       <div class="ac-iw">
-        <img class="ac-img" src="photos/Apt2/344.jpg" alt="Casa Pipa Centro" loading="lazy">
+        <img class="ac-img" src="photos/Apt2/344.jpg" alt="Piazzeta Duplex" loading="lazy">
         <span class="ac-badge">Airbnb</span>
       </div>
       <div class="ac-body">
@@ -512,9 +629,9 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
 
     <!-- Listing 3 — Booking.com : Pipa Centro Residence -->
-    <div class="ac rv d3">
+    <div class="ac rv d3" data-dest="pipa">
       <div class="ac-iw">
-        <img class="ac-img" src="photos/Apt3/21.avif" alt="Piazzeta Duplex" loading="lazy">
+        <img class="ac-img" src="photos/Apt3/21.avif" alt="Casa Pipa Centro" loading="lazy">
         <span class="ac-badge">Booking.com</span>
       </div>
       <div class="ac-body">
@@ -535,7 +652,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
 
     <!-- Listing 4 — São Paulo : Vila Madalena -->
-    <div class="ac rv d1">
+    <div class="ac rv d1" data-dest="sp">
       <div class="ac-iw">
         <img class="ac-img" src="https://placehold.co/800x533/1a3020/e8c4a0?text=Photos+à+venir" alt="Vila Madalena Loft" loading="lazy">
         <span class="ac-badge">Airbnb</span>
@@ -558,7 +675,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
 
     <!-- Listing 5 — São Paulo : Jardins -->
-    <div class="ac rv d2">
+    <div class="ac rv d2" data-dest="sp">
       <div class="ac-iw">
         <img class="ac-img" src="https://placehold.co/800x533/101e12/c26040?text=Photos+à+venir" alt="Jardins Studio" loading="lazy">
         <span class="ac-badge">Airbnb</span>
@@ -693,7 +810,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
   </div>
   <div class="ft-bot">
-    <span>© 2026 Yemanya Stays · Pipa &amp; São Paulo · Brésil</span>
+    <span>© 2026 Yemanya Stays · Pipa, Brésil</span>
     <div class="socials">
       <a href="#" class="sc-lk">ig</a>
       <a href="#" class="sc-lk">wa</a>
@@ -1245,6 +1362,116 @@ var APT_DATA = [
     t.classList.add('sh');
     setTimeout(function () { t.classList.remove('sh'); }, 4500);
     modalForm.reset();
+  });
+})();
+
+/* ══ Destination Picker + Photo Trail ═══════════════════ */
+(function () {
+  var destEl = document.getElementById('dest');
+  if (!destEl) return;
+
+  /* ── Photo trail ── */
+  var PHOTOS = [
+    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=420',
+    'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=420',
+    'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=420',
+    'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=420',
+    'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=420',
+    'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=420',
+    'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=420',
+    'https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=420',
+    'https://images.unsplash.com/photo-1448865229049-f3de223e7a2e?w=420',
+    'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=420',
+  ];
+  var trailIdx = 0, lastSpawn = 0;
+  var prevX = 0, prevY = 0;
+
+  destEl.addEventListener('mousemove', function (e) {
+    var now = Date.now();
+    if (now - lastSpawn < 130) return;
+    lastSpawn = now;
+
+    /* direction vector → spawn behind cursor */
+    var dx  = e.clientX - prevX;
+    var dy  = e.clientY - prevY;
+    var len = Math.sqrt(dx * dx + dy * dy) || 1;
+    var behind = 55; /* px behind cursor */
+    var spawnX = e.clientX - (dx / len) * behind;
+    var spawnY = e.clientY - (dy / len) * behind;
+    prevX = e.clientX; prevY = e.clientY;
+
+    var w   = 82; /* fixed square size */
+    var rot = (Math.random() - 0.5) * 22;
+
+    var img = document.createElement('img');
+    img.src = PHOTOS[trailIdx % PHOTOS.length];
+    trailIdx++;
+
+    img.style.cssText = [
+      'position:fixed',
+      'pointer-events:none',
+      'z-index:9996',
+      'border-radius:0',
+      'object-fit:cover',
+      'will-change:transform,opacity',
+      'left:' + (spawnX - w / 2) + 'px',
+      'top:'  + (spawnY - w / 2) + 'px',
+      'width:' + w + 'px',
+      'height:' + w + 'px',
+      'transform:rotate(' + rot + 'deg) scale(0)',
+      'opacity:1',
+      'transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1)',
+    ].join(';');
+
+    document.body.appendChild(img);
+
+    /* pop in */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        img.style.transform = 'rotate(' + rot + 'deg) scale(1)';
+      });
+    });
+
+    /* fade out */
+    setTimeout(function () {
+      img.style.transition = 'opacity 0.42s ease, transform 0.42s ease';
+      img.style.opacity    = '0';
+      img.style.transform  = 'rotate(' + rot + 'deg) scale(0.82) translateY(-16px)';
+      setTimeout(function () { if (img.parentNode) img.parentNode.removeChild(img); }, 440);
+    }, 660);
+  });
+
+  /* Extend cursor hover to dest halves */
+  var curEl = document.getElementById('cur');
+  document.querySelectorAll('.dest-half').forEach(function (h) {
+    h.addEventListener('mouseenter', function () { if (curEl) curEl.classList.add('hov'); });
+    h.addEventListener('mouseleave', function () { if (curEl) curEl.classList.remove('hov'); });
+  });
+
+  /* ── Destination selection ── */
+  var cards      = document.querySelectorAll('.ac[data-dest]');
+  var expSection = document.getElementById('exp');
+  var switchBar  = document.getElementById('dest-switch');
+  var switchBtns = document.querySelectorAll('.dsw-btn');
+
+  function selectDest(dest) {
+    cards.forEach(function (c) {
+      c.style.display = c.dataset.dest === dest ? '' : 'none';
+    });
+    if (expSection) expSection.style.display = dest === 'pipa' ? '' : 'none';
+    if (switchBar)  switchBar.classList.add('vis');
+    switchBtns.forEach(function (b) { b.classList.toggle('on', b.dataset.dest === dest); });
+    setTimeout(function () {
+      document.getElementById('apts').scrollIntoView({ behavior: 'smooth' });
+    }, 120);
+  }
+
+  document.querySelectorAll('.dest-half').forEach(function (half) {
+    half.addEventListener('click', function () { selectDest(half.dataset.dest); });
+  });
+
+  switchBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () { selectDest(btn.dataset.dest); });
   });
 })();
 </script>
