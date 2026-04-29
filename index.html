@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yemanya Stays — Location Premium à Pipa, Brésil</title>
+<title>Yemanya Stays — Location Premium au Brésil</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -302,7 +302,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
 
 /* Gallery */
 #modal-gal{position:relative;background:#000;display:flex;flex-direction:column;overflow:hidden}
-#mg-main{width:100%;height:auto;max-height:420px;object-fit:contain;display:block;transition:opacity .16s;background:#000}
+#mg-main{flex:1;min-height:0;width:100%;object-fit:contain;display:block;transition:opacity .16s}
 .mg-arr{
   position:absolute;top:50%;transform:translateY(-50%);
   background:rgba(12,26,14,.72);border:1px solid rgba(255,255,255,.14);
@@ -437,8 +437,8 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
   <!-- Bottom CTA strip — revealed when video fills screen -->
   <div id="hero-exp-foot">
     <div class="hero-left">
-      <div class="hero-loc">Pipa · Rio Grande do Norte · Brésil</div>
-      <p class="hero-sub">Des appartements d'exception nichés sur les falaises de Pipa,<br>à deux pas des plus belles plages du Nordeste.</p>
+      <div class="hero-loc">Pipa · São Paulo · Brésil</div>
+      <p class="hero-sub">Des appartements d'exception entre l'océan sauvage de Pipa<br>et l'énergie urbaine de São Paulo.</p>
     </div>
     <div class="hero-right">
       <a href="#apts" class="btn-pr">Découvrir les logements →</a>
@@ -450,7 +450,8 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
 
 <!-- Stats -->
 <div class="stats">
-  <div class="st"><span class="st-n">3</span><span>Appartements premium</span></div>
+  <div class="st"><span class="st-n">5</span><span>Appartements premium</span></div>
+  <div class="st"><span class="st-n">2</span><span>Destinations au Brésil</span></div>
   <div class="st"><span class="st-n">500+</span><span>Voyageurs accueillis</span></div>
   <div class="st"><span class="st-n">4.9★</span><span>Note moyenne</span></div>
 </div>
@@ -459,8 +460,8 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
 <section id="apts">
   <div class="sh rv">
     <span class="s-tag">Nos logements</span>
-    <h2>Un havre de paix <em>vous attend</em></h2>
-    <p>Chaque appartement a été soigneusement sélectionné pour son emplacement et ses finitions haut de gamme.</p>
+    <h2>Pipa ou São Paulo, <em>votre havre vous attend</em></h2>
+    <p>Cinq appartements soigneusement sélectionnés entre l'océan sauvage du Nordeste et l'énergie vibrante de la capitale culturelle du Brésil.</p>
   </div>
   <div class="apts-grid">
 
@@ -490,12 +491,12 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     <!-- Listing 2 — Airbnb -->
     <div class="ac rv d2">
       <div class="ac-iw">
-        <img class="ac-img" src="photos/Apt2/344.jpg" alt="Piazzeta Duplex" loading="lazy">
+        <img class="ac-img" src="photos/Apt2/344.jpg" alt="Casa Pipa Centro" loading="lazy">
         <span class="ac-badge">Airbnb</span>
       </div>
       <div class="ac-body">
         <div class="ac-loc">Piazzeta · Pipa</div>
-        <div class="ac-name">Piazzeta Duplex</div>
+        <div class="ac-name">Casa Pipa Centro</div>
         <div class="ac-desc">Duplex de caractère à la Piazzeta, au cœur de l'animation de Pipa. Volumes généreux, terrasse et vue sur les toits du village.</div>
         <div class="ac-feats">
           <div class="ac-f">Duplex</div>
@@ -513,12 +514,12 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     <!-- Listing 3 — Booking.com : Pipa Centro Residence -->
     <div class="ac rv d3">
       <div class="ac-iw">
-        <img class="ac-img" src="photos/Apt3/21.avif" alt="Casa Pipa Centro" loading="lazy">
+        <img class="ac-img" src="photos/Apt3/21.avif" alt="Piazzeta Duplex" loading="lazy">
         <span class="ac-badge">Booking.com</span>
       </div>
       <div class="ac-body">
         <div class="ac-loc">Centro · Pipa</div>
-        <div class="ac-name">Casa Pipa Centro</div>
+        <div class="ac-name">Piazzeta Duplex</div>
         <div class="ac-desc">Appartement lumineux au cœur de Pipa, à quelques minutes à pied des plages, des boutiques et de la vie nocturne de la Piazzeta.</div>
         <div class="ac-feats">
           <div class="ac-f">Appartement entier</div>
@@ -529,6 +530,52 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
         <div class="ac-ft">
           <div class="ac-pr"><div class="am">45€</div><div class="un">par nuit</div></div>
           <a href="https://www.booking.com/hotel/br/apartamentos-pipa-centro.fr.html" target="_blank" rel="noopener" class="ac-lnk">Réserver →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Listing 4 — São Paulo : Vila Madalena -->
+    <div class="ac rv d1">
+      <div class="ac-iw">
+        <img class="ac-img" src="https://placehold.co/800x533/1a3020/e8c4a0?text=Photos+à+venir" alt="Vila Madalena Loft" loading="lazy">
+        <span class="ac-badge">Airbnb</span>
+      </div>
+      <div class="ac-body">
+        <div class="ac-loc">Vila Madalena · São Paulo</div>
+        <div class="ac-name">Vila Madalena Loft</div>
+        <div class="ac-desc">Loft design au cœur du quartier bohème de São Paulo. Street art, galeries, bars branchés et restaurants à portée de main. L'âme créative de la ville.</div>
+        <div class="ac-feats">
+          <div class="ac-f">Loft entier</div>
+          <div class="ac-f">Vila Madalena</div>
+          <div class="ac-f">Vie nocturne</div>
+          <div class="ac-f">Très bien noté</div>
+        </div>
+        <div class="ac-ft">
+          <div class="ac-pr"><div class="am">55€</div><div class="un">par nuit</div></div>
+          <a href="#book" class="ac-lnk">Demande →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Listing 5 — São Paulo : Jardins -->
+    <div class="ac rv d2">
+      <div class="ac-iw">
+        <img class="ac-img" src="https://placehold.co/800x533/101e12/c26040?text=Photos+à+venir" alt="Jardins Studio" loading="lazy">
+        <span class="ac-badge">Airbnb</span>
+      </div>
+      <div class="ac-body">
+        <div class="ac-loc">Jardins · São Paulo</div>
+        <div class="ac-name">Jardins Studio</div>
+        <div class="ac-desc">Studio élégant dans le quartier chic des Jardins, à deux pas de l'Avenida Paulista. Restaurants gastronomiques, musées et shopping haut de gamme à pied.</div>
+        <div class="ac-feats">
+          <div class="ac-f">Studio premium</div>
+          <div class="ac-f">Proche Paulista</div>
+          <div class="ac-f">Gastronomie</div>
+          <div class="ac-f">Très bien noté</div>
+        </div>
+        <div class="ac-ft">
+          <div class="ac-pr"><div class="am">65€</div><div class="un">par nuit</div></div>
+          <a href="#book" class="ac-lnk">Demande →</a>
         </div>
       </div>
     </div>
@@ -602,9 +649,11 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
         <label>Appartement souhaité</label>
         <select required>
           <option value="">Choisir un logement…</option>
-          <option>Pipa Piazzeta 13</option>
-          <option>Séjour à Pipa (Airbnb)</option>
-          <option>Pipa Centro Residence</option>
+          <option>Piazzeta 13 — Pipa</option>
+          <option>Casa Pipa Centro — Pipa</option>
+          <option>Piazzeta Duplex — Pipa</option>
+          <option>Vila Madalena Loft — São Paulo</option>
+          <option>Jardins Studio — São Paulo</option>
           <option>Flexible / à discuter</option>
         </select>
       </div>
@@ -623,7 +672,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
   <div class="ft-grid">
     <div class="ft-brand">
       <span class="logo">Yemanya<em> Stays</em></span>
-      <p>Des appartements premium au cœur de Pipa, l'une des plus belles destinations du Brésil. Votre paradis vous attend.</p>
+      <p>Des appartements premium entre Pipa et São Paulo — l'océan sauvage du Nordeste et l'énergie de la capitale culturelle du Brésil.</p>
     </div>
     <div class="ft-col">
       <h4>Navigation</h4>
@@ -644,7 +693,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
   </div>
   <div class="ft-bot">
-    <span>© 2026 Yemanya Stays · Pipa, Brésil</span>
+    <span>© 2026 Yemanya Stays · Pipa &amp; São Paulo · Brésil</span>
     <div class="socials">
       <a href="#" class="sc-lk">ig</a>
       <a href="#" class="sc-lk">wa</a>
@@ -919,7 +968,7 @@ var APT_DATA = [
               '2026-06-10','2026-06-11','2026-06-12','2026-06-13']
   },
   {
-    name: 'Piazzeta Duplex',
+    name: 'Casa Pipa Centro',
     loc: 'Piazzeta · Pipa',
     price: 45,
     platform: 'Airbnb',
@@ -936,7 +985,7 @@ var APT_DATA = [
               '2026-06-01','2026-06-02','2026-06-03','2026-06-04']
   },
   {
-    name: 'Casa Pipa Centro',
+    name: 'Piazzeta Duplex',
     loc: 'Centro · Pipa',
     price: 45,
     platform: 'Booking.com',
@@ -952,6 +1001,28 @@ var APT_DATA = [
     unavail: ['2026-05-15','2026-05-16','2026-05-17','2026-05-18',
               '2026-06-05','2026-06-06','2026-06-07','2026-06-08',
               '2026-06-20','2026-06-21','2026-06-22']
+  },
+  {
+    name: 'Vila Madalena Loft',
+    loc: 'Vila Madalena · São Paulo',
+    price: 55,
+    platform: 'Airbnb',
+    link: '#book',
+    desc: 'Loft design au cœur du quartier bohème de São Paulo. Street art, galeries, bars branchés et restaurants à portée de main. L\'âme créative de la ville.',
+    feats: ['Loft entier', 'Vila Madalena', 'Vie nocturne', 'Très bien noté'],
+    photos: ['https://placehold.co/800x533/1a3020/e8c4a0?text=Photos+à+venir'],
+    unavail: []
+  },
+  {
+    name: 'Jardins Studio',
+    loc: 'Jardins · São Paulo',
+    price: 65,
+    platform: 'Airbnb',
+    link: '#book',
+    desc: 'Studio élégant dans le quartier chic des Jardins, à deux pas de l\'Avenida Paulista. Restaurants gastronomiques, musées et shopping haut de gamme à pied.',
+    feats: ['Studio premium', 'Proche Paulista', 'Gastronomie', 'Très bien noté'],
+    photos: ['https://placehold.co/800x533/101e12/c26040?text=Photos+à+venir'],
+    unavail: []
   }
 ];
 
