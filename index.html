@@ -1398,24 +1398,33 @@ var APT_DATA = [
     'https://www.vivepipa.com//data/imagenes/2022/05/14/7687/lg_1652506959-vivepipa-umi-Funkitchen-praia-da-pipa-1.jpg',
   ];
   var PHOTOS_SP = [
-    /* Vila Madalena — Beco do Batman */
-    'https://upload.wikimedia.org/wikipedia/commons/7/70/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_07.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/4/44/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_02.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/e/e9/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_08.jpg',
-    'https://cafeviagem.com/wp-content/uploads/2018/10/Beco-do-Batman-Vila-Madalena-1-1280x704.jpg',
+    /* Vila Madalena — Beco do Batman (thumbnails 400px) */
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_07.jpg/400px-Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_07.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_02.jpg/400px-Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_02.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_08.jpg/400px-Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_08.jpg',
     /* Vila Madalena coucher de soleil */
-    'https://upload.wikimedia.org/wikipedia/commons/e/eb/Por-do-Sol_%28P%C3%B3s-Chuva%29_-_Vila_Madalena_S%C3%A3o_Paulo_-_SP_-_Flickr_-_Rodrigo_Paoletti.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Por-do-Sol_%28P%C3%B3s-Chuva%29_-_Vila_Madalena_S%C3%A3o_Paulo_-_SP_-_Flickr_-_Rodrigo_Paoletti.jpg/400px-Por-do-Sol_%28P%C3%B3s-Chuva%29_-_Vila_Madalena_S%C3%A3o_Paulo_-_SP_-_Flickr_-_Rodrigo_Paoletti.jpg',
     /* Ibirapuera */
-    'https://upload.wikimedia.org/wikipedia/commons/1/11/Parque_do_ibirapuera_visto_do_c%C3%A9u.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Parque_do_ibirapuera_visto_do_c%C3%A9u.jpg/400px-Parque_do_ibirapuera_visto_do_c%C3%A9u.jpg',
     /* Avenida Paulista */
-    'https://upload.wikimedia.org/wikipedia/commons/6/66/Paulista_Avenue_at_night%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Paulista_Avenue%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/c/c8/MASP_S%C3%A3o_Paulo_%28cropped%29.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/a/ab/Vista_da_Avenida_Paulista_-_Sesc_Avenida_Paulista_por_Rodrigo_Tetsuo_Argenton_%281%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Paulista_Avenue_at_night%2C_S%C3%A3o_Paulo%2C_Brazil.jpg/400px-Paulista_Avenue_at_night%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Paulista_Avenue%2C_S%C3%A3o_Paulo%2C_Brazil.jpg/400px-Paulista_Avenue%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/MASP_S%C3%A3o_Paulo_%28cropped%29.jpg/400px-MASP_S%C3%A3o_Paulo_%28cropped%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Vista_da_Avenida_Paulista_-_Sesc_Avenida_Paulista_por_Rodrigo_Tetsuo_Argenton_%281%29.jpg/400px-Vista_da_Avenida_Paulista_-_Sesc_Avenida_Paulista_por_Rodrigo_Tetsuo_Argenton_%281%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/PaulistaPanorama.jpg/400px-PaulistaPanorama.jpg',
   ];
 
   var currentDest  = 'pipa';
   var trailIdxPipa = 0, trailIdxSP = 0;
+
+  /* Préchargement — toutes les photos mises en cache avant la première apparition */
+  var preloaded = false;
+  destEl.addEventListener('mouseenter', function () {
+    if (preloaded) return; preloaded = true;
+    PHOTOS_PIPA.concat(PHOTOS_SP).forEach(function (src) {
+      var p = new Image(); p.src = src;
+    });
+  }, { once: true });
   /* Distance-based spawn: one photo every SPAWN_DIST pixels, regardless of speed */
   var SPAWN_DIST = 32;
   var spawnLastX = 0, spawnLastY = 0;
