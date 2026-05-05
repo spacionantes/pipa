@@ -1384,7 +1384,7 @@ var APT_DATA = [
   if (!destEl) return;
 
   /* ── Photo trail ── */
-  var PHOTOS = [
+  var PHOTOS_PIPA = [
     /* Praia do Amor */
     'https://www.vivepipa.com//data/imagenes/2018/12/07/1568/lg_1544200441-Copia%20de%20Praia%20do%20Amor%2012.jpg',
     'https://www.vivepipa.com//data/imagenes/2018/12/07/1576/lg_1544200853-Copia%20de%20Praia%20do%20Amor%201.jpg',
@@ -1393,13 +1393,29 @@ var APT_DATA = [
     'https://www.vivepipa.com//data/imagenes/2018/12/07/1574/lg_1544200777-_MG_6739.jpg',
     'https://www.vivepipa.com//data/imagenes/2018/12/07/1577/lg_1544200904-Copia%20de%20Praia%20do%20Amor%203.jpg',
     'https://www.vivepipa.com//data/imagenes/2018/11/09/261/lg_1541768230-lovebach.jpg',
-    /* Chapadão */
     'https://www.vivepipa.com//data/imagenes/2019/01/09/1865/lg_1546998238-Chapadao.jpg',
-    /* Mirante & village */
     'https://www.vivepipa.com//data/imagenes/2022/05/11/7413/lg_1652263676-vivepipa-mirante-sunset-bar-praia-da-pipa-2.jpg',
     'https://www.vivepipa.com//data/imagenes/2022/05/14/7687/lg_1652506959-vivepipa-umi-Funkitchen-praia-da-pipa-1.jpg',
   ];
-  var trailIdx = 0;
+  var PHOTOS_SP = [
+    /* Vila Madalena — Beco do Batman */
+    'https://upload.wikimedia.org/wikipedia/commons/7/70/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_07.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/44/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_02.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/e/e9/Beco_do_Batman_-_Vila-Madalena%2C_S%C3%A3o_Paulo_-_SP_08.jpg',
+    'https://cafeviagem.com/wp-content/uploads/2018/10/Beco-do-Batman-Vila-Madalena-1-1280x704.jpg',
+    /* Vila Madalena coucher de soleil */
+    'https://upload.wikimedia.org/wikipedia/commons/e/eb/Por-do-Sol_%28P%C3%B3s-Chuva%29_-_Vila_Madalena_S%C3%A3o_Paulo_-_SP_-_Flickr_-_Rodrigo_Paoletti.jpg',
+    /* Ibirapuera */
+    'https://upload.wikimedia.org/wikipedia/commons/1/11/Parque_do_ibirapuera_visto_do_c%C3%A9u.jpg',
+    /* Avenida Paulista */
+    'https://upload.wikimedia.org/wikipedia/commons/6/66/Paulista_Avenue_at_night%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Paulista_Avenue%2C_S%C3%A3o_Paulo%2C_Brazil.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c8/MASP_S%C3%A3o_Paulo_%28cropped%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/a/ab/Vista_da_Avenida_Paulista_-_Sesc_Avenida_Paulista_por_Rodrigo_Tetsuo_Argenton_%281%29.jpg',
+  ];
+
+  var currentDest  = 'pipa';
+  var trailIdxPipa = 0, trailIdxSP = 0;
   /* Distance-based spawn: one photo every SPAWN_DIST pixels, regardless of speed */
   var SPAWN_DIST = 32;
   var spawnLastX = 0, spawnLastY = 0;
@@ -1433,9 +1449,10 @@ var APT_DATA = [
     var w   = 82; /* fixed square size */
     var rot = (Math.random() - 0.5) * 22;
 
+    var photos = currentDest === 'sp' ? PHOTOS_SP : PHOTOS_PIPA;
+    var idx    = currentDest === 'sp' ? trailIdxSP++ : trailIdxPipa++;
     var img = document.createElement('img');
-    img.src = PHOTOS[trailIdx % PHOTOS.length];
-    trailIdx++;
+    img.src = photos[idx % photos.length];
 
     img.style.cssText = [
       'position:fixed',
@@ -1471,10 +1488,14 @@ var APT_DATA = [
     }, 660);
   });
 
-  /* Extend cursor hover to dest halves */
+  /* Extend cursor hover + track active dest for photo trail */
   var curEl = document.getElementById('cur');
   document.querySelectorAll('.dest-half').forEach(function (h) {
-    h.addEventListener('mouseenter', function () { if (curEl) curEl.classList.add('hov'); });
+    h.addEventListener('mouseenter', function () {
+      if (curEl) curEl.classList.add('hov');
+      currentDest = h.dataset.dest;
+      firstMove = true; /* reset spawn pos to avoid gap on switch */
+    });
     h.addEventListener('mouseleave', function () { if (curEl) curEl.classList.remove('hov'); });
   });
 
