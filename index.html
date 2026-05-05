@@ -150,12 +150,27 @@ body{background:var(--dk);color:var(--tx);font-family:'Inter',sans-serif;cursor:
 .btn-gh{display:inline-flex;align-items:center;text-decoration:none;color:var(--tx);padding:.88rem 2rem;border-radius:50px;font-size:.85rem;font-weight:500;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px);background:rgba(12,26,14,.3);transition:all .3s}
 .btn-gh:hover{background:rgba(12,26,14,.55);border-color:rgba(255,255,255,.35)}
 
-/* ─── Stats ───────────────────────────────────────────── */
-.stats{display:flex;justify-content:center;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);background:rgba(16,30,18,.8)}
-.st{flex:1;max-width:280px;display:flex;flex-direction:column;align-items:center;padding:2rem;border-right:1px solid var(--bd);gap:.3rem}
-.st:last-child{border-right:none}
-.st-n{font-family:'Syne',sans-serif;font-size:2.3rem;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.st span:last-child{font-size:.76rem;color:var(--mu);letter-spacing:.06em}
+/* ─── Reviews ticker ──────────────────────────────────── */
+#reviews-band{
+  border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);
+  background:rgba(12,20,14,.85);
+  overflow:hidden;padding:.9rem 0;position:relative;
+}
+#reviews-band::before,#reviews-band::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+#reviews-band::before{left:0;background:linear-gradient(to right,rgba(12,20,14,.95),transparent)}
+#reviews-band::after{right:0;background:linear-gradient(to left,rgba(12,20,14,.95),transparent)}
+.rb-track{display:flex;width:max-content}
+.rb-inner{display:flex;align-items:center;gap:0;animation:rb-scroll 40s linear infinite;width:max-content}
+@keyframes rb-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rb-item{
+  display:inline-flex;flex-direction:column;gap:.18rem;
+  padding:0 3rem;border-right:1px solid var(--bd);flex-shrink:0;
+}
+.rb-stars{font-size:.7rem;color:var(--gd);letter-spacing:.05em}
+.rb-text{font-size:.78rem;font-style:italic;color:rgba(240,234,216,.82);white-space:nowrap;max-width:380px;overflow:hidden;text-overflow:ellipsis}
+.rb-auth{font-size:.65rem;color:var(--mu);letter-spacing:.08em}
 
 /* ─── Section commons ─────────────────────────────────── */
 section{padding:8rem 4rem}
@@ -570,12 +585,24 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
   <div id="dest-hint"><span class="sh-arr">↓</span>&nbsp;Choisissez votre destination</div>
 </div>
 
-<!-- Stats -->
-<div class="stats">
-  <div class="st"><span class="st-n">5</span><span>Appartements premium</span></div>
-  <div class="st"><span class="st-n">2</span><span>Destinations au Brésil</span></div>
-  <div class="st"><span class="st-n">500+</span><span>Voyageurs accueillis</span></div>
-  <div class="st"><span class="st-n">4.9★</span><span>Note moyenne</span></div>
+<!-- Reviews ticker -->
+<div id="reviews-band">
+  <div class="rb-track">
+    <div class="rb-inner">
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Appartement magnifique, vue incroyable sur la mer. On reviendra sans hésiter ! »</div><div class="rb-auth">— Camille &amp; Jules, Piazzeta 13</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Accueil parfait, logement impeccable, emplacement idéal au cœur de Pipa. »</div><div class="rb-auth">— Thomas B., Casa Pipa Centro</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Le duplex est sublime, très bien équipé. Vraiment au-dessus de nos attentes. »</div><div class="rb-auth">— Sophie &amp; Marc, Piazzeta Duplex</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Séjour de rêve à Pipa. L'appartement est exactement comme sur les photos, voire mieux. »</div><div class="rb-auth">— Léa R., Piazzeta 13</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Hôtes très réactifs, appartement propre et lumineux. Plage à 5 minutes à pied. »</div><div class="rb-auth">— Antoine M., Casa Pipa Centro</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Terrasse avec vue époustouflante. On a passé les meilleures vacances de notre vie. »</div><div class="rb-auth">— Margaux &amp; Romain, Piazzeta Duplex</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Appartement magnifique, vue incroyable sur la mer. On reviendra sans hésiter ! »</div><div class="rb-auth">— Camille &amp; Jules, Piazzeta 13</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Accueil parfait, logement impeccable, emplacement idéal au cœur de Pipa. »</div><div class="rb-auth">— Thomas B., Casa Pipa Centro</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Le duplex est sublime, très bien équipé. Vraiment au-dessus de nos attentes. »</div><div class="rb-auth">— Sophie &amp; Marc, Piazzeta Duplex</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Séjour de rêve à Pipa. L'appartement est exactement comme sur les photos, voire mieux. »</div><div class="rb-auth">— Léa R., Piazzeta 13</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Hôtes très réactifs, appartement propre et lumineux. Plage à 5 minutes à pied. »</div><div class="rb-auth">— Antoine M., Casa Pipa Centro</div></div>
+      <div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">« Terrasse avec vue époustouflante. On a passé les meilleures vacances de notre vie. »</div><div class="rb-auth">— Margaux &amp; Romain, Piazzeta Duplex</div></div>
+    </div>
+  </div>
 </div>
 
 <!-- Destination switcher (shown after selection) -->
