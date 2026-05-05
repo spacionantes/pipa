@@ -43,6 +43,12 @@ body{background:var(--dk);color:var(--tx);font-family:'Inter',sans-serif;cursor:
 .nav-btn{text-decoration:none;border:1px solid var(--gd);color:var(--gd);padding:.55rem 1.4rem;border-radius:50px;font-size:.8rem;font-weight:600;letter-spacing:.07em;transition:all .3s}
 .nav-btn:hover{background:var(--gd);color:var(--dk)}
 
+/* ─── Language switcher ──────────────────────────────── */
+#lang-sw{display:flex;align-items:center;gap:.2rem;margin-left:1.8rem}
+.lang-btn{background:none;border:1px solid transparent;color:rgba(255,255,255,.45);font-family:'Inter',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.09em;padding:.28rem .5rem;border-radius:4px;cursor:none;transition:all .22s;text-transform:uppercase;line-height:1}
+.lang-btn:hover{color:var(--tx);border-color:var(--bd2)}
+.lang-btn.on{color:var(--gd);border-color:rgba(194,96,64,.5);background:rgba(194,96,64,.08)}
+
 /* ─── Hero: Scroll Expand ─────────────────────────────── */
 #hero{
   position:relative;
@@ -517,11 +523,17 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
 <nav id="nav">
   <div class="logo">Yemanya<em> Stays</em></div>
   <ul class="nav-ul">
-    <li><a href="#apts">Logements</a></li>
-    <li><a href="#exp">Expériences</a></li>
-    <li><a href="#book">Réserver</a></li>
+    <li><a href="#apts" id="nav-apts">Logements</a></li>
+    <li><a href="#exp" id="nav-exp">Expériences</a></li>
+    <li><a href="#book" id="nav-book">Réserver</a></li>
   </ul>
-  </nav>
+  <div id="lang-sw">
+    <button class="lang-btn on" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+    <button class="lang-btn" data-lang="pt">PT</button>
+  </div>
+</nav>
 
 <!-- Hero -->
 <section id="hero">
@@ -535,7 +547,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
       <source src="Gh010035.mp4" type="video/mp4">
     </video>
     <div id="vid-ov"></div>
-    <div id="scroll-hint"><span class="sh-arr">↓</span>&nbsp;Défiler pour explorer</div>
+    <div id="scroll-hint"><span class="sh-arr">↓</span>&nbsp;<span id="scroll-hint-text">Défiler pour explorer</span></div>
   </div>
 
   <!-- Brand titles — split apart on scroll -->
@@ -545,12 +557,12 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
   <!-- Bottom CTA strip — revealed when video fills screen -->
   <div id="hero-exp-foot">
     <div class="hero-left">
-      <div class="hero-loc">Pipa · São Paulo · Brésil</div>
-      <p class="hero-sub">Des appartements d'exception entre l'océan sauvage de Pipa<br>et l'énergie urbaine de São Paulo.</p>
+      <div class="hero-loc" id="hero-loc">Pipa · São Paulo · Brésil</div>
+      <p class="hero-sub" id="hero-sub">Des appartements d'exception entre l'océan sauvage de Pipa<br>et l'énergie urbaine de São Paulo.</p>
     </div>
     <div class="hero-right">
-      <a href="#dest" class="btn-pr">Choisir ma destination →</a>
-      <a href="#exp" class="btn-gh">Explorer Pipa</a>
+      <a href="#dest" class="btn-pr" id="hero-cta1">Choisir ma destination →</a>
+      <a href="#exp" class="btn-gh" id="hero-cta2">Explorer Pipa</a>
     </div>
   </div>
 
@@ -582,7 +594,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
     </div>
   </div>
 
-  <div id="dest-hint"><span class="sh-arr">↓</span>&nbsp;Choisissez votre destination</div>
+  <div id="dest-hint"><span class="sh-arr">↓</span>&nbsp;<span id="dest-hint-text">Choisissez votre destination</span></div>
 </div>
 
 <!-- Reviews ticker -->
@@ -912,7 +924,7 @@ footer{background:var(--dk);border-top:1px solid var(--bd);padding:4rem}
         </div>
         <div class="fg"><label>Message (optionnel)</label><textarea placeholder="Demandes spéciales, questions…"></textarea></div>
         <button type="submit" class="f-sub">Envoyer ma demande →</button>
-        <a id="mi-ext-link" href="#" target="_blank" rel="noopener" class="mi-ext-btn">Réserver directement sur <span id="mi-platform"></span> →</a>
+        <a id="mi-ext-link" href="#" target="_blank" rel="noopener" class="mi-ext-btn"><span id="mi-direct-text">Réserver directement sur</span> <span id="mi-platform"></span> →</a>
       </form>
     </div>
 
@@ -1208,9 +1220,7 @@ var APT_DATA = [
   var mfCheckout= document.getElementById('mf-checkout');
   var modalForm = document.getElementById('modal-form');
 
-  var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin',
-                'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  var DAYS   = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+  /* MONTHS / DAYS come from global (set by setLang) */
 
   var curApt, curPhoto, calYear, calMonth, selStart, selEnd, savedOverflow;
 
@@ -1355,15 +1365,16 @@ var APT_DATA = [
   }
 
   function renderSel() {
+    var tr = T[LANG] || T.fr;
     if (!selStart) {
-      calSel.innerHTML = '<span style="color:var(--mu)">Sélectionnez vos dates d\'arrivée et de départ</span>';
+      calSel.innerHTML = '<span style="color:var(--mu)">' + tr.mi_sel_hint + '</span>';
       return;
     }
-    var h = '<span><span class="csl">Arrivée</span><span class="csi">' + selStart + '</span></span>';
+    var h = '<span><span class="csl">' + tr.mi_arrival + '</span><span class="csi">' + selStart + '</span></span>';
     if (selEnd) {
-      h += '<span><span class="csl">Départ</span><span class="csi">' + selEnd + '</span></span>';
+      h += '<span><span class="csl">' + tr.mi_depart + '</span><span class="csi">' + selEnd + '</span></span>';
       var n = Math.round((new Date(selEnd) - new Date(selStart)) / 86400000);
-      h += '<span style="color:var(--gd);font-weight:600">' + n + ' nuit' + (n > 1 ? 's' : '') +
+      h += '<span style="color:var(--gd);font-weight:600">' + n + ' ' + (n > 1 ? tr.mi_nights_pl : tr.mi_nights) +
            ' · ' + (n * curApt.price) + '€</span>';
     }
     calSel.innerHTML = h;
@@ -1404,6 +1415,351 @@ var APT_DATA = [
     modalForm.reset();
   });
 })();
+
+/* ══ i18n — Global calendar arrays (set by setLang) ═════ */
+var MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin',
+              'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+var DAYS   = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+var LANG   = 'fr';
+
+var T = {
+  fr:{
+    html_lang:'fr',title:'Yemanya Stays — Location Premium au Brésil',
+    nav_apts:'Logements',nav_exp:'Expériences',nav_book:'Réserver',
+    scroll_hint:'Défiler pour explorer',
+    hero_loc:'Pipa · São Paulo · Brésil',
+    hero_sub:'Des appartements d\'exception entre l\'océan sauvage de Pipa<br>et l\'énergie urbaine de São Paulo.',
+    hero_cta1:'Choisir ma destination →',hero_cta2:'Explorer Pipa',
+    dest_tag_pipa:'Nordeste · Brésil',dest_sub_pipa:'Falaises sauvages, plages<br>préservées &amp; village bohème',dest_cta:'Explorer →',
+    dest_tag_sp:'Sudeste · Brésil',dest_sub_sp:'Énergie urbaine, quartiers<br>tendance &amp; gastronomie',
+    dest_hint:'Choisissez votre destination',
+    apts_tag:'Nos logements',apts_title:'Pipa ou São Paulo, <em>votre havre vous attend</em>',
+    apts_sub:'Cinq appartements soigneusement sélectionnés entre l\'océan sauvage du Nordeste et l\'énergie vibrante de la capitale culturelle du Brésil.',
+    per_night:'par nuit',book_btn:'Réserver →',request_btn:'Demande →',
+    apt1_loc:'Piazzeta · Pipa',apt1_desc:'Appartement idéalement situé à deux pas de la Piazzeta, cœur animé de Pipa. Confort moderne, décoration soignée et accès facile aux plages et restaurants.',apt1_f1:'Chambres privées',apt1_f2:'Centre de Pipa',apt1_f3:'Proche plage',apt1_f4:'Très bien noté',
+    apt2_loc:'Piazzeta · Pipa',apt2_desc:'Duplex de caractère à la Piazzeta, au cœur de l\'animation de Pipa. Volumes généreux, terrasse et vue sur les toits du village.',apt2_f1:'Duplex',apt2_f2:'Terrasse privée',apt2_f3:'Proche plages',apt2_f4:'Très bien noté',
+    apt3_loc:'Centro · Pipa',apt3_desc:'Appartement lumineux au cœur de Pipa, à quelques minutes à pied des plages, des boutiques et de la vie nocturne de la Piazzeta.',apt3_f1:'Appartement entier',apt3_f2:'Hyper centre',apt3_f3:'Tout à pied',apt3_f4:'Très bien noté',
+    apt4_loc:'Vila Madalena · São Paulo',apt4_desc:'Loft design au cœur du quartier bohème de São Paulo. Street art, galeries, bars branchés et restaurants à portée de main.',apt4_f1:'Loft entier',apt4_f2:'Vila Madalena',apt4_f3:'Vie nocturne',apt4_f4:'Très bien noté',
+    apt5_loc:'Jardins · São Paulo',apt5_desc:'Studio élégant dans le quartier chic des Jardins, à deux pas de l\'Avenida Paulista. Restaurants gastronomiques, musées et shopping haut de gamme à pied.',apt5_f1:'Studio premium',apt5_f2:'Proche Paulista',apt5_f3:'Gastronomie',apt5_f4:'Très bien noté',
+    exp_tag:'La vie locale',exp_title:'Vivez <em>comme un local</em>',exp_sub:'Nos coups de cœur et bonnes adresses pour profiter pleinement de la magie de Pipa.',
+    tab_r:'Restaurants',tab_b:'Bars',
+    exp_r1_desc:'Cuisine espagnole créative au cœur de Pipa. Thon mi-cuit au sésame, ceviche de crevettes, ambiance intime à la lumière de bougies. Incontournable.',
+    exp_r2_desc:'Le restaurant végétarien du mythique hôtel Toca da Coruja. Une cuisine raffinée dans un jardin tropical luxuriant. Sélectionné au MICHELIN Guide 2025.',
+    exp_r3_desc:'La meilleure churrascaria de Pipa. Viandes grillées au feu de bois, musique live le week-end, ambiance chaleureuse et généreuse. Noté 4.9/5.',
+    exp_b1_desc:'Perché sur une colline, sept belvédères offrent une vue à couper le souffle sur la plage de Pipa et le coucher de soleil. L\'adresse sunset de Pipa. Jeu–Mar, 16h–20h.',
+    exp_b2_desc:'Bar-restaurant hawaïen-japonais avec vue imprenable sur la mer. Poké bowls, sushis, cocktails tropicaux. L\'endroit parfait pour un déjeuner les pieds dans le sable.',
+    exp_b3_desc:'Bar de plage secret face au pic do Abacate, spot de surf mythique. Cuisine japonaise-péruvienne, forró live le dimanche dès 17h, tortues marines au large. Entrée gratuite.',
+    exp_b4_desc:'Le bar culte de Pipa. Caïpirinhas glacées, art brut sur les murs, musique brésilienne à fond. Là où les locaux finissent leurs nuits — et commencent leurs légendes.',
+    book_title:'Planifiez votre <em>escapade</em>',book_sub:'Envoyez-nous votre demande et nous vous répondrons sous 24h avec les disponibilités et le meilleur tarif garanti.',
+    book_pk1:'Meilleur tarif garanti, sans commission',book_pk2:'Arrivée & départ flexibles',book_pk3:'Conciergerie locale incluse',book_pk4:'Annulation sans frais (72h avant)',
+    lbl_firstname:'Prénom',lbl_lastname:'Nom',lbl_email:'Email',lbl_apt:'Appartement souhaité',opt_choose:'Choisir un logement…',lbl_checkin:'Arrivée',lbl_checkout:'Départ',lbl_msg:'Message (optionnel)',
+    ph_firstname:'Jean',ph_lastname:'Dupont',ph_email:'jean@email.com',ph_msg:'Demandes spéciales, questions…',
+    btn_submit:'Envoyer ma demande →',
+    ft_nav_h:'Navigation',ft_contact_h:'Contact',
+    ft_brand:'Des appartements premium entre Pipa et São Paulo — l\'océan sauvage du Nordeste et l\'énergie de la capitale culturelle du Brésil.',
+    ft_l1:'Nos logements',ft_l2:'Expériences locales',ft_l3:'Réserver',
+    ft_copy:'© 2026 Yemanya Stays · Pipa, Brésil',
+    mi_night:'/ nuit',mi_avail:'Disponibilités',mi_request:'Faire une demande',
+    mi_sel_hint:'Sélectionnez vos dates d\'arrivée et de départ',mi_arrival:'Arrivée',mi_depart:'Départ',
+    mi_direct:'Réserver directement sur',mi_nights:'nuit',mi_nights_pl:'nuits',
+    lbl_modal_fn:'Prénom',lbl_modal_em:'Email',ph_modal_msg:'Demandes spéciales, questions…',
+    months:['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+    days:['Lu','Ma','Me','Je','Ve','Sa','Di'],
+    toast_msg:'Demande envoyée — réponse sous 24h.',
+    reviews:[
+      {text:'« Appartement magnifique, vue incroyable sur la mer. On reviendra sans hésiter ! »',auth:'— Camille &amp; Jules, Piazzeta 13'},
+      {text:'« Accueil parfait, logement impeccable, emplacement idéal au cœur de Pipa. »',auth:'— Thomas B., Casa Pipa Centro'},
+      {text:'« Le duplex est sublime, très bien équipé. Vraiment au-dessus de nos attentes. »',auth:'— Sophie &amp; Marc, Piazzeta Duplex'},
+      {text:'« Séjour de rêve à Pipa. L\'appartement est exactement comme sur les photos, voire mieux. »',auth:'— Léa R., Piazzeta 13'},
+      {text:'« Hôtes très réactifs, appartement propre et lumineux. Plage à 5 minutes à pied. »',auth:'— Antoine M., Casa Pipa Centro'},
+      {text:'« Terrasse avec vue époustouflante. On a passé les meilleures vacances de notre vie. »',auth:'— Margaux &amp; Romain, Piazzeta Duplex'},
+    ]
+  },
+  en:{
+    html_lang:'en',title:'Yemanya Stays — Premium Rentals in Brazil',
+    nav_apts:'Stays',nav_exp:'Experiences',nav_book:'Book',
+    scroll_hint:'Scroll to explore',
+    hero_loc:'Pipa · São Paulo · Brazil',
+    hero_sub:'Exceptional apartments between Pipa\'s wild ocean<br>and the urban energy of São Paulo.',
+    hero_cta1:'Choose my destination →',hero_cta2:'Explore Pipa',
+    dest_tag_pipa:'Nordeste · Brazil',dest_sub_pipa:'Wild cliffs, pristine<br>beaches &amp; bohemian village',dest_cta:'Explore →',
+    dest_tag_sp:'Southeast · Brazil',dest_sub_sp:'Urban energy, trendy<br>neighborhoods &amp; gastronomy',
+    dest_hint:'Choose your destination',
+    apts_tag:'Our Stays',apts_title:'Pipa or São Paulo, <em>your haven awaits</em>',
+    apts_sub:'Five carefully selected apartments between the wild ocean of Nordeste and the vibrant energy of Brazil\'s cultural capital.',
+    per_night:'per night',book_btn:'Book →',request_btn:'Enquire →',
+    apt1_loc:'Piazzeta · Pipa',apt1_desc:'Ideally located apartment steps from the Piazzeta, the vibrant heart of Pipa. Modern comfort, tasteful decor and easy access to beaches and restaurants.',apt1_f1:'Private rooms',apt1_f2:'Pipa centre',apt1_f3:'Near beach',apt1_f4:'Top-rated',
+    apt2_loc:'Piazzeta · Pipa',apt2_desc:'Character duplex at the Piazzeta, in the heart of Pipa\'s nightlife. Generous spaces, private terrace and rooftop village views.',apt2_f1:'Duplex',apt2_f2:'Private terrace',apt2_f3:'Near beaches',apt2_f4:'Top-rated',
+    apt3_loc:'Centro · Pipa',apt3_desc:'Bright apartment in the heart of Pipa, a short walk from beaches, shops and the Piazzeta nightlife.',apt3_f1:'Entire apartment',apt3_f2:'Central location',apt3_f3:'Walk everywhere',apt3_f4:'Top-rated',
+    apt4_loc:'Vila Madalena · São Paulo',apt4_desc:'Design loft in the heart of São Paulo\'s bohemian quarter. Street art, galleries, trendy bars and restaurants at your doorstep.',apt4_f1:'Entire loft',apt4_f2:'Vila Madalena',apt4_f3:'Nightlife',apt4_f4:'Top-rated',
+    apt5_loc:'Jardins · São Paulo',apt5_desc:'Elegant studio in the upscale Jardins district, steps from Avenida Paulista. Fine dining, museums and high-end shopping on foot.',apt5_f1:'Premium studio',apt5_f2:'Near Paulista',apt5_f3:'Gastronomy',apt5_f4:'Top-rated',
+    exp_tag:'Local Life',exp_title:'Live <em>like a local</em>',exp_sub:'Our favourite spots and best addresses to fully enjoy the magic of Pipa.',
+    tab_r:'Restaurants',tab_b:'Bars',
+    exp_r1_desc:'Creative Spanish cuisine in the heart of Pipa. Sesame-crusted tuna, prawn ceviche, intimate candlelit atmosphere. A must.',
+    exp_r2_desc:'The vegetarian restaurant of the legendary Toca da Coruja hotel. Refined cuisine in a lush tropical garden. Selected for the MICHELIN Guide 2025.',
+    exp_r3_desc:'The best churrascaria in Pipa. Wood-fired grilled meats, live music on weekends, warm and generous atmosphere. Rated 4.9/5.',
+    exp_b1_desc:'Perched on a hillside, seven viewpoints offer breathtaking views of Pipa beach and the sunset. Pipa\'s ultimate sunset spot. Thu–Tue, 4–8pm.',
+    exp_b2_desc:'Hawaiian-Japanese bar-restaurant with stunning sea views. Poké bowls, sushi, tropical cocktails. The perfect spot for a barefoot beach lunch.',
+    exp_b3_desc:'Secret beach bar facing the legendary Abacate surf spot. Japanese-Peruvian cuisine, live forró on Sundays from 5pm, sea turtles offshore. Free entry.',
+    exp_b4_desc:'Pipa\'s cult bar. Icy caipirinhas, raw art on the walls, Brazilian music at full blast. Where locals end their nights — and begin their legends.',
+    book_title:'Plan your <em>getaway</em>',book_sub:'Send us your request and we\'ll reply within 24h with availability and the best guaranteed rate.',
+    book_pk1:'Best rate guaranteed, no commission',book_pk2:'Flexible check-in & check-out',book_pk3:'Local concierge included',book_pk4:'Free cancellation (72h before)',
+    lbl_firstname:'First name',lbl_lastname:'Last name',lbl_email:'Email',lbl_apt:'Desired apartment',opt_choose:'Choose a stay…',lbl_checkin:'Check-in',lbl_checkout:'Check-out',lbl_msg:'Message (optional)',
+    ph_firstname:'John',ph_lastname:'Smith',ph_email:'john@email.com',ph_msg:'Special requests, questions…',
+    btn_submit:'Send my request →',
+    ft_nav_h:'Navigation',ft_contact_h:'Contact',
+    ft_brand:'Premium apartments between Pipa and São Paulo — the wild ocean of Nordeste and the energy of Brazil\'s cultural capital.',
+    ft_l1:'Our stays',ft_l2:'Local experiences',ft_l3:'Book',
+    ft_copy:'© 2026 Yemanya Stays · Pipa, Brazil',
+    mi_night:'/ night',mi_avail:'Availability',mi_request:'Make a request',
+    mi_sel_hint:'Select your check-in and check-out dates',mi_arrival:'Check-in',mi_depart:'Check-out',
+    mi_direct:'Book directly on',mi_nights:'night',mi_nights_pl:'nights',
+    lbl_modal_fn:'First name',lbl_modal_em:'Email',ph_modal_msg:'Special requests, questions…',
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+    days:['Mo','Tu','We','Th','Fr','Sa','Su'],
+    toast_msg:'Request sent — reply within 24h.',
+    reviews:[
+      {text:'« Magnificent apartment, incredible sea views. We\'ll definitely be back! »',auth:'— Camille &amp; Jules, Piazzeta 13'},
+      {text:'« Perfect welcome, impeccable apartment, ideal location in the heart of Pipa. »',auth:'— Thomas B., Casa Pipa Centro'},
+      {text:'« The duplex is stunning, very well equipped. Truly beyond our expectations. »',auth:'— Sophie &amp; Marc, Piazzeta Duplex'},
+      {text:'« Dream stay in Pipa. The apartment is exactly as in the photos, even better. »',auth:'— Léa R., Piazzeta 13'},
+      {text:'« Very responsive hosts, clean and bright apartment. Beach just 5 minutes away. »',auth:'— Antoine M., Casa Pipa Centro'},
+      {text:'« Terrace with breathtaking views. We had the best holiday of our lives. »',auth:'— Margaux &amp; Romain, Piazzeta Duplex'},
+    ]
+  },
+  es:{
+    html_lang:'es',title:'Yemanya Stays — Alquiler Premium en Brasil',
+    nav_apts:'Alojamientos',nav_exp:'Experiencias',nav_book:'Reservar',
+    scroll_hint:'Desplaza para explorar',
+    hero_loc:'Pipa · São Paulo · Brasil',
+    hero_sub:'Apartamentos de excepción entre el océano salvaje de Pipa<br>y la energía urbana de São Paulo.',
+    hero_cta1:'Elegir mi destino →',hero_cta2:'Explorar Pipa',
+    dest_tag_pipa:'Nordeste · Brasil',dest_sub_pipa:'Acantilados salvajes, playas<br>vírgenes &amp; pueblo bohemio',dest_cta:'Explorar →',
+    dest_tag_sp:'Sudeste · Brasil',dest_sub_sp:'Energía urbana, barrios<br>de moda &amp; gastronomía',
+    dest_hint:'Elige tu destino',
+    apts_tag:'Nuestros alojamientos',apts_title:'Pipa o São Paulo, <em>tu refugio te espera</em>',
+    apts_sub:'Cinco apartamentos cuidadosamente seleccionados entre el océano salvaje del Nordeste y la vibrante energía de la capital cultural de Brasil.',
+    per_night:'por noche',book_btn:'Reservar →',request_btn:'Consultar →',
+    apt1_loc:'Piazzeta · Pipa',apt1_desc:'Apartamento idealmente ubicado a pasos de la Piazzeta, corazón animado de Pipa. Confort moderno, decoración cuidada y fácil acceso a playas y restaurantes.',apt1_f1:'Habitaciones privadas',apt1_f2:'Centro de Pipa',apt1_f3:'Cerca playa',apt1_f4:'Muy bien valorado',
+    apt2_loc:'Piazzeta · Pipa',apt2_desc:'Dúplex con carácter en la Piazzeta, en el corazón de Pipa. Espacios generosos, terraza privada y vistas a los tejados del pueblo.',apt2_f1:'Dúplex',apt2_f2:'Terraza privada',apt2_f3:'Cerca playas',apt2_f4:'Muy bien valorado',
+    apt3_loc:'Centro · Pipa',apt3_desc:'Apartamento luminoso en el corazón de Pipa, a pocos minutos a pie de las playas, tiendas y la vida nocturna de la Piazzeta.',apt3_f1:'Apartamento entero',apt3_f2:'Hipercentro',apt3_f3:'Todo a pie',apt3_f4:'Muy bien valorado',
+    apt4_loc:'Vila Madalena · São Paulo',apt4_desc:'Loft de diseño en el corazón del barrio bohemio de São Paulo. Arte urbano, galerías, bares de moda y restaurantes al alcance de la mano.',apt4_f1:'Loft completo',apt4_f2:'Vila Madalena',apt4_f3:'Vida nocturna',apt4_f4:'Muy bien valorado',
+    apt5_loc:'Jardins · São Paulo',apt5_desc:'Estudio elegante en el exclusivo barrio de los Jardins, a pasos de la Avenida Paulista. Restaurantes gastronómicos, museos y compras de alto nivel a pie.',apt5_f1:'Estudio premium',apt5_f2:'Cerca Paulista',apt5_f3:'Gastronomía',apt5_f4:'Muy bien valorado',
+    exp_tag:'La vida local',exp_title:'Vive <em>como un local</em>',exp_sub:'Nuestros favoritos y mejores direcciones para disfrutar al máximo de la magia de Pipa.',
+    tab_r:'Restaurantes',tab_b:'Bares',
+    exp_r1_desc:'Cocina española creativa en el corazón de Pipa. Atún a media cocción con sésamo, ceviche de gambas, ambiente íntimo a la luz de las velas. Imprescindible.',
+    exp_r2_desc:'El restaurante vegetariano del mítico hotel Toca da Coruja. Cocina refinada en un exuberante jardín tropical. Seleccionado en la Guía MICHELIN 2025.',
+    exp_r3_desc:'La mejor churrascaria de Pipa. Carnes a la brasa de leña, música en vivo los fines de semana, ambiente cálido y generoso. Valorado 4.9/5.',
+    exp_b1_desc:'Encaramado en una colina, siete miradores ofrecen vistas impresionantes de la playa de Pipa y el atardecer. El punto sunset de Pipa. Jue–Mar, 16h–20h.',
+    exp_b2_desc:'Bar-restaurante hawaiano-japonés con vistas al mar. Poké bowls, sushi, cócteles tropicales. El lugar perfecto para almorzar con los pies en la arena.',
+    exp_b3_desc:'Bar de playa secreto frente al pico do Abacate, mítico spot de surf. Cocina japonesa-peruana, forró en vivo los domingos desde las 17h, tortugas marinas en alta mar. Entrada gratuita.',
+    exp_b4_desc:'El bar de culto de Pipa. Caipirinhas heladas, arte bruto en las paredes, música brasileña a todo volumen. Donde los locales terminan sus noches — y comienzan sus leyendas.',
+    book_title:'Planifica tu <em>escapada</em>',book_sub:'Envíanos tu solicitud y te responderemos en 24h con disponibilidad y la mejor tarifa garantizada.',
+    book_pk1:'Mejor tarifa garantizada, sin comisión',book_pk2:'Entrada y salida flexibles',book_pk3:'Conserjería local incluida',book_pk4:'Cancelación gratuita (72h antes)',
+    lbl_firstname:'Nombre',lbl_lastname:'Apellido',lbl_email:'Email',lbl_apt:'Apartamento deseado',opt_choose:'Elige un alojamiento…',lbl_checkin:'Llegada',lbl_checkout:'Salida',lbl_msg:'Mensaje (opcional)',
+    ph_firstname:'Juan',ph_lastname:'García',ph_email:'juan@email.com',ph_msg:'Solicitudes especiales, preguntas…',
+    btn_submit:'Enviar mi solicitud →',
+    ft_nav_h:'Navegación',ft_contact_h:'Contacto',
+    ft_brand:'Apartamentos premium entre Pipa y São Paulo — el océano salvaje del Nordeste y la energía de la capital cultural de Brasil.',
+    ft_l1:'Nuestros alojamientos',ft_l2:'Experiencias locales',ft_l3:'Reservar',
+    ft_copy:'© 2026 Yemanya Stays · Pipa, Brasil',
+    mi_night:'/ noche',mi_avail:'Disponibilidad',mi_request:'Hacer una solicitud',
+    mi_sel_hint:'Selecciona tus fechas de llegada y salida',mi_arrival:'Llegada',mi_depart:'Salida',
+    mi_direct:'Reservar directamente en',mi_nights:'noche',mi_nights_pl:'noches',
+    lbl_modal_fn:'Nombre',lbl_modal_em:'Email',ph_modal_msg:'Solicitudes especiales, preguntas…',
+    months:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    days:['Lu','Ma','Mi','Ju','Vi','Sá','Do'],
+    toast_msg:'Solicitud enviada — respuesta en 24h.',
+    reviews:[
+      {text:'« Apartamento magnífico, vistas increíbles al mar. ¡Volveremos sin dudarlo! »',auth:'— Camille &amp; Jules, Piazzeta 13'},
+      {text:'« Acogida perfecta, alojamiento impecable, ubicación ideal en el corazón de Pipa. »',auth:'— Thomas B., Casa Pipa Centro'},
+      {text:'« El dúplex es sublime, muy bien equipado. Realmente por encima de nuestras expectativas. »',auth:'— Sophie &amp; Marc, Piazzeta Duplex'},
+      {text:'« Estancia de ensueño en Pipa. El apartamento es exactamente como en las fotos, incluso mejor. »',auth:'— Léa R., Piazzeta 13'},
+      {text:'« Anfitriones muy atentos, apartamento limpio y luminoso. Playa a 5 minutos andando. »',auth:'— Antoine M., Casa Pipa Centro'},
+      {text:'« Terraza con vistas impresionantes. Hemos pasado las mejores vacaciones de nuestra vida. »',auth:'— Margaux &amp; Romain, Piazzeta Duplex'},
+    ]
+  },
+  pt:{
+    html_lang:'pt-BR',title:'Yemanya Stays — Aluguel Premium no Brasil',
+    nav_apts:'Acomodações',nav_exp:'Experiências',nav_book:'Reservar',
+    scroll_hint:'Role para explorar',
+    hero_loc:'Pipa · São Paulo · Brasil',
+    hero_sub:'Apartamentos excepcionais entre o oceano selvagem de Pipa<br>e a energia urbana de São Paulo.',
+    hero_cta1:'Escolher meu destino →',hero_cta2:'Explorar Pipa',
+    dest_tag_pipa:'Nordeste · Brasil',dest_sub_pipa:'Falésias selvagens, praias<br>preservadas &amp; vila boêmia',dest_cta:'Explorar →',
+    dest_tag_sp:'Sudeste · Brasil',dest_sub_sp:'Energia urbana, bairros<br>badalados &amp; gastronomia',
+    dest_hint:'Escolha seu destino',
+    apts_tag:'Nossas acomodações',apts_title:'Pipa ou São Paulo, <em>seu refúgio te espera</em>',
+    apts_sub:'Cinco apartamentos cuidadosamente selecionados entre o oceano selvagem do Nordeste e a energia vibrante da capital cultural do Brasil.',
+    per_night:'por noite',book_btn:'Reservar →',request_btn:'Consultar →',
+    apt1_loc:'Piazzeta · Pipa',apt1_desc:'Apartamento idealmente localizado a dois passos da Piazzeta, coração animado de Pipa. Conforto moderno, decoração cuidada e fácil acesso às praias e restaurantes.',apt1_f1:'Quartos privados',apt1_f2:'Centro de Pipa',apt1_f3:'Perto da praia',apt1_f4:'Muito bem avaliado',
+    apt2_loc:'Piazzeta · Pipa',apt2_desc:'Duplex com charme na Piazzeta, no coração da animação de Pipa. Espaços generosos, terraço privativo e vista sobre os telhados do vilarejo.',apt2_f1:'Duplex',apt2_f2:'Terraço privativo',apt2_f3:'Perto das praias',apt2_f4:'Muito bem avaliado',
+    apt3_loc:'Centro · Pipa',apt3_desc:'Apartamento luminoso no coração de Pipa, a poucos minutos a pé das praias, lojas e da vida noturna da Piazzeta.',apt3_f1:'Apartamento inteiro',apt3_f2:'Hiper centro',apt3_f3:'Tudo a pé',apt3_f4:'Muito bem avaliado',
+    apt4_loc:'Vila Madalena · São Paulo',apt4_desc:'Loft design no coração do bairro boêmio de São Paulo. Arte de rua, galerias, bares descolados e restaurantes à mão.',apt4_f1:'Loft inteiro',apt4_f2:'Vila Madalena',apt4_f3:'Vida noturna',apt4_f4:'Muito bem avaliado',
+    apt5_loc:'Jardins · São Paulo',apt5_desc:'Estúdio elegante no bairro chique dos Jardins, a dois passos da Avenida Paulista. Restaurantes gastronômicos, museus e compras de alto padrão a pé.',apt5_f1:'Estúdio premium',apt5_f2:'Perto da Paulista',apt5_f3:'Gastronomia',apt5_f4:'Muito bem avaliado',
+    exp_tag:'A vida local',exp_title:'Viva <em>como um local</em>',exp_sub:'Nossas dicas e melhores endereços para aproveitar ao máximo a magia de Pipa.',
+    tab_r:'Restaurantes',tab_b:'Bares',
+    exp_r1_desc:'Culinária espanhola criativa no coração de Pipa. Atum selado com gergelim, ceviche de camarão, ambiente íntimo à luz de velas. Imperdível.',
+    exp_r2_desc:'O restaurante vegetariano do mítico hotel Toca da Coruja. Uma culinária refinada em um jardim tropical exuberante. Selecionado no Guia MICHELIN 2025.',
+    exp_r3_desc:'A melhor churrascaria de Pipa. Carnes grelhadas na lenha, música ao vivo nos fins de semana, ambiente caloroso e generoso. Avaliado 4.9/5.',
+    exp_b1_desc:'Empoleirado em uma colina, sete mirantes oferecem uma vista de tirar o fôlego da praia de Pipa e o pôr do sol. O point do pôr do sol em Pipa. Qui–Ter, 16h–20h.',
+    exp_b2_desc:'Bar-restaurante havaiano-japonês com vista deslumbrante para o mar. Poké bowls, sushis, coquetéis tropicais. O lugar perfeito para um almoço com os pés na areia.',
+    exp_b3_desc:'Bar de praia secreto em frente ao pico do Abacate, ponto de surf mítico. Culinária japonesa-peruana, forró ao vivo aos domingos a partir das 17h, tartarugas marinhas ao largo. Entrada gratuita.',
+    exp_b4_desc:'O bar cult de Pipa. Caipirinhas geladas, arte bruta nas paredes, música brasileira no volume máximo. Onde os locais terminam suas noites — e começam suas lendas.',
+    book_title:'Planeje sua <em>escapada</em>',book_sub:'Envie sua solicitação e responderemos em 24h com as disponibilidades e a melhor tarifa garantida.',
+    book_pk1:'Melhor tarifa garantida, sem comissão',book_pk2:'Check-in & check-out flexíveis',book_pk3:'Concierge local incluído',book_pk4:'Cancelamento gratuito (72h antes)',
+    lbl_firstname:'Nome',lbl_lastname:'Sobrenome',lbl_email:'E-mail',lbl_apt:'Apartamento desejado',opt_choose:'Escolher uma acomodação…',lbl_checkin:'Chegada',lbl_checkout:'Saída',lbl_msg:'Mensagem (opcional)',
+    ph_firstname:'João',ph_lastname:'Silva',ph_email:'joao@email.com',ph_msg:'Pedidos especiais, dúvidas…',
+    btn_submit:'Enviar minha solicitação →',
+    ft_nav_h:'Navegação',ft_contact_h:'Contato',
+    ft_brand:'Apartamentos premium entre Pipa e São Paulo — o oceano selvagem do Nordeste e a energia da capital cultural do Brasil.',
+    ft_l1:'Nossas acomodações',ft_l2:'Experiências locais',ft_l3:'Reservar',
+    ft_copy:'© 2026 Yemanya Stays · Pipa, Brasil',
+    mi_night:'/ noite',mi_avail:'Disponibilidade',mi_request:'Fazer uma solicitação',
+    mi_sel_hint:'Selecione suas datas de chegada e saída',mi_arrival:'Chegada',mi_depart:'Saída',
+    mi_direct:'Reservar diretamente no',mi_nights:'noite',mi_nights_pl:'noites',
+    lbl_modal_fn:'Nome',lbl_modal_em:'E-mail',ph_modal_msg:'Pedidos especiais, dúvidas…',
+    months:['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    days:['Se','Te','Qu','Qu','Se','Sá','Do'],
+    toast_msg:'Solicitação enviada — resposta em 24h.',
+    reviews:[
+      {text:'« Apartamento magnífico, vista incrível para o mar. Voltaremos com certeza! »',auth:'— Camille &amp; Jules, Piazzeta 13'},
+      {text:'« Recepção perfeita, acomodação impecável, localização ideal no coração de Pipa. »',auth:'— Thomas B., Casa Pipa Centro'},
+      {text:'« O duplex é sublime, muito bem equipado. Realmente acima das nossas expectativas. »',auth:'— Sophie &amp; Marc, Piazzeta Duplex'},
+      {text:'« Estadia dos sonhos em Pipa. O apartamento é exatamente como nas fotos, até melhor. »',auth:'— Léa R., Piazzeta 13'},
+      {text:'« Anfitriões muito atenciosos, apartamento limpo e luminoso. Praia a 5 minutos a pé. »',auth:'— Antoine M., Casa Pipa Centro'},
+      {text:'« Terraço com vista deslumbrante. Passamos as melhores férias da nossa vida. »',auth:'— Margaux &amp; Romain, Piazzeta Duplex'},
+    ]
+  }
+};
+
+function setLang(lang) {
+  if (!T[lang]) return;
+  LANG = lang;
+  var t = T[lang];
+
+  /* html lang + title */
+  document.documentElement.lang = t.html_lang;
+  document.title = t.title;
+
+  /* helpers */
+  function txt(id, key) { var el=document.getElementById(id); if(el&&t[key]!==undefined) el.textContent=t[key]; }
+  function htm(id, key) { var el=document.getElementById(id); if(el&&t[key]!==undefined) el.innerHTML=t[key]; }
+
+  /* nav */
+  txt('nav-apts','nav_apts'); txt('nav-exp','nav_exp'); txt('nav-book','nav_book');
+
+  /* hero */
+  txt('scroll-hint-text','scroll_hint');
+  txt('hero-loc','hero_loc');
+  htm('hero-sub','hero_sub');
+  txt('hero-cta1','hero_cta1');
+  txt('hero-cta2','hero_cta2');
+
+  /* destination picker */
+  var pipaH = document.querySelector('.dest-half[data-dest="pipa"]');
+  var spH   = document.querySelector('.dest-half[data-dest="sp"]');
+  if(pipaH){pipaH.querySelector('.dest-tag').textContent=t.dest_tag_pipa;pipaH.querySelector('.dest-sub').innerHTML=t.dest_sub_pipa;pipaH.querySelector('.dest-cta').textContent=t.dest_cta;}
+  if(spH)  {spH.querySelector('.dest-tag').textContent=t.dest_tag_sp;spH.querySelector('.dest-sub').innerHTML=t.dest_sub_sp;spH.querySelector('.dest-cta').textContent=t.dest_cta;}
+  txt('dest-hint-text','dest_hint');
+
+  /* apartments section header */
+  var aptsSh = document.querySelector('#apts .sh');
+  if(aptsSh){aptsSh.querySelector('.s-tag').textContent=t.apts_tag;aptsSh.querySelector('h2').innerHTML=t.apts_title;aptsSh.querySelector('p').textContent=t.apts_sub;}
+
+  /* per-night labels + book buttons */
+  document.querySelectorAll('.un').forEach(function(el){el.textContent=t.per_night;});
+  document.querySelectorAll('.ac-lnk').forEach(function(btn,i){btn.textContent=i<3?t.book_btn:t.request_btn;});
+
+  /* apartment cards */
+  var aptMeta=[
+    {loc:t.apt1_loc,desc:t.apt1_desc,feats:[t.apt1_f1,t.apt1_f2,t.apt1_f3,t.apt1_f4]},
+    {loc:t.apt2_loc,desc:t.apt2_desc,feats:[t.apt2_f1,t.apt2_f2,t.apt2_f3,t.apt2_f4]},
+    {loc:t.apt3_loc,desc:t.apt3_desc,feats:[t.apt3_f1,t.apt3_f2,t.apt3_f3,t.apt3_f4]},
+    {loc:t.apt4_loc,desc:t.apt4_desc,feats:[t.apt4_f1,t.apt4_f2,t.apt4_f3,t.apt4_f4]},
+    {loc:t.apt5_loc,desc:t.apt5_desc,feats:[t.apt5_f1,t.apt5_f2,t.apt5_f3,t.apt5_f4]},
+  ];
+  document.querySelectorAll('.ac[data-dest]').forEach(function(card,i){
+    if(!aptMeta[i])return;
+    var el;
+    el=card.querySelector('.ac-loc'); if(el) el.textContent=aptMeta[i].loc;
+    el=card.querySelector('.ac-desc'); if(el) el.textContent=aptMeta[i].desc;
+    card.querySelectorAll('.ac-f').forEach(function(f,fi){if(aptMeta[i].feats[fi]) f.textContent=aptMeta[i].feats[fi];});
+  });
+  /* sync APT_DATA for modal */
+  APT_DATA.forEach(function(apt,i){if(aptMeta[i]){apt.desc=aptMeta[i].desc;apt.feats=aptMeta[i].feats;apt.loc=aptMeta[i].loc;}});
+
+  /* experiences header + tabs */
+  var expSh=document.querySelector('#exp .sh');
+  if(expSh){expSh.querySelector('.s-tag').textContent=t.exp_tag;expSh.querySelector('h2').innerHTML=t.exp_title;expSh.querySelector('p').textContent=t.exp_sub;}
+  var tabR=document.querySelector('.tb[data-t="r"]'); if(tabR) tabR.textContent=t.tab_r;
+  var tabB=document.querySelector('.tb[data-t="b"]'); if(tabB) tabB.textContent=t.tab_b;
+
+  /* experience card descriptions */
+  var expDs=[t.exp_r1_desc,t.exp_r2_desc,t.exp_r3_desc,t.exp_b1_desc,t.exp_b2_desc,t.exp_b3_desc,t.exp_b4_desc];
+  document.querySelectorAll('.ec-ds').forEach(function(el,i){if(expDs[i]) el.textContent=expDs[i];});
+
+  /* booking section */
+  var bkInfo=document.querySelector('.bk-info');
+  if(bkInfo){bkInfo.querySelector('h2').innerHTML=t.book_title;bkInfo.querySelector('p').textContent=t.book_sub;var pks=bkInfo.querySelectorAll('.bk-pk');[t.book_pk1,t.book_pk2,t.book_pk3,t.book_pk4].forEach(function(v,i){if(pks[i]) pks[i].textContent=v;});}
+
+  var bkF=document.getElementById('bk-form');
+  if(bkF){
+    var lbls=bkF.querySelectorAll('label');
+    [t.lbl_firstname,t.lbl_lastname,t.lbl_email,t.lbl_apt,t.lbl_checkin,t.lbl_checkout,t.lbl_msg].forEach(function(v,i){if(lbls[i]) lbls[i].textContent=v;});
+    var tis=bkF.querySelectorAll('input[type="text"]');
+    if(tis[0]) tis[0].placeholder=t.ph_firstname;
+    if(tis[1]) tis[1].placeholder=t.ph_lastname;
+    var em=bkF.querySelector('input[type="email"]'); if(em) em.placeholder=t.ph_email;
+    var ta=bkF.querySelector('textarea'); if(ta) ta.placeholder=t.ph_msg;
+    var op=bkF.querySelector('select option[value=""]'); if(op) op.textContent=t.opt_choose;
+    var sub=bkF.querySelector('.f-sub'); if(sub) sub.textContent=t.btn_submit;
+  }
+
+  /* footer */
+  var ftBp=document.querySelector('.ft-brand p'); if(ftBp) ftBp.textContent=t.ft_brand;
+  var ftH4=document.querySelectorAll('footer h4');
+  if(ftH4[0]) ftH4[0].textContent=t.ft_nav_h;
+  if(ftH4[1]) ftH4[1].textContent=t.ft_contact_h;
+  var ftLi=document.querySelectorAll('.ft-col:first-of-type li a');
+  [t.ft_l1,t.ft_l2,t.ft_l3].forEach(function(v,i){if(ftLi[i]) ftLi[i].textContent=v;});
+  var ftCp=document.querySelector('.ft-bot span'); if(ftCp) ftCp.textContent=t.ft_copy;
+
+  /* modal static labels */
+  txt('mi-price-unit','mi_night');
+  txt('mi-direct-text','mi_direct');
+  var mist=document.querySelectorAll('.mi-stitle');
+  if(mist[0]) mist[0].textContent=t.mi_avail;
+  if(mist[1]) mist[1].textContent=t.mi_request;
+  var mf=document.getElementById('modal-form');
+  if(mf){
+    var ml=mf.querySelectorAll('label');
+    [t.lbl_modal_fn,t.lbl_modal_em,t.lbl_checkin,t.lbl_checkout,t.lbl_msg].forEach(function(v,i){if(ml[i]) ml[i].textContent=v;});
+    var ms=mf.querySelector('.f-sub'); if(ms) ms.textContent=t.btn_submit;
+    var mt=mf.querySelector('textarea'); if(mt) mt.placeholder=t.ph_modal_msg;
+  }
+
+  /* reviews ticker — rebuild */
+  var rbi=document.querySelector('.rb-inner');
+  if(rbi){
+    var revs=t.reviews.concat(t.reviews);
+    rbi.innerHTML=revs.map(function(r){return'<div class="rb-item"><div class="rb-stars">★★★★★</div><div class="rb-text">'+r.text+'</div><div class="rb-auth">'+r.auth+'</div></div>';}).join('');
+  }
+
+  /* toast */
+  txt('toast','toast_msg');
+
+  /* calendar arrays */
+  MONTHS=t.months; DAYS=t.days;
+
+  /* lang button active */
+  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('on',b.dataset.lang===lang);});
+}
+
+/* lang button listeners */
+document.querySelectorAll('.lang-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){setLang(btn.dataset.lang);});
+});
 
 /* ══ Destination Picker + Photo Trail ═══════════════════ */
 (function () {
